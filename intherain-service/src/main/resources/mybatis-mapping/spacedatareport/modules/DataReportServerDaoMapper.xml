@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.time.scenery.rain.space.mybatis.dao.client.DataReportServerDaoMapper"> 
+	<resultMap id="RentEnterpriseStoreMap" type="com.time.scenery.rain.space.mybatis.daoentity.RentEnterpriseStoreMap">
+		<result column="enterprise_store_name" property="enterprise_store_name" />
+		<result column="enterprise_store_addr" property="enterprise_store_addr" />
+		<result column="enterprise_store_phone" property="enterprise_store_phone" />
+		<result column="enterprise_store_man" property="enterprise_store_man" />
+		<result column="enterprise_store_license_num" property="enterprise_store_license_num" />
+		<result column="enterprise_store_license_time" property="enterprise_store_license_time" />
+		<result column="enterprise_store_license_end_time" property="enterprise_store_license_end_time" />
+		<result column="enterprise_store_add_time" property="enterprise_store_add_time" />
+		<result column="enterprise" property="enterprise" />
+		<result column="enterprise_store_status" property="enterprise_store_status" />
+		<result column="area_pro" property="area_pro" />
+		<result column="area_city" property="area_city" />
+		<result column="area_county" property="area_county" />
+		<result column="operation" property="operation" />
+		<result column="shop_guid" property="shop_guid" />
+		<result column="police_county" property="police_county" />
+	</resultMap>
+	
+	<resultMap id="CarinfoOfDelete" type="com.xmgps.taxi.datareportserver.demo.TabCarinfo">
+		<result column="enterprise_store_name" property="enterprise_store_name" />
+		<result column="car_id" property="car_id" />
+		<result column="car_no" property="car_no" />
+		<result column="police_county" property="police_county" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	
+	<select id="getAllShopAndUnitInfo" resultMap="RentEnterpriseStoreMap">
+	SELECT
+	a.shop_guid as shop_guid,
+	a.SHOP_NAME AS enterprise_store_name,
+	a.ADDRESS AS enterprise_store_addr,
+	substring(a.TEL,0,20) AS enterprise_store_phone,
+	a.LXR AS enterprise_store_man,
+	a.CREATETIME AS enterprise_store_add_time,
+	a.SHOP_NAME AS enterprise,
+	REPLACE(case 	when c.unitName not in ('思明分局','湖里分局','集美分局','翔安分局','海沧分局','同安分局') then
+			'市辖区' 
+			else c.unitName end , '分局', '区') AS area_county,
+	'厦门市公安局交通警察支队'+REPLACE(case 	when c.unitName not in ('思明分局','湖里分局','集美分局','翔安分局','海沧分局','同安分局') then
+			'直属' 
+			else c.unitName end , '分局', '')+'大队' as police_county
+FROM
+	tab_Shop a
+LEFT JOIN tab_UnitInfo b ON a.unitId = b.unitId
+LEFT JOIN tab_UnitInfo c ON c.unitId = b.parentId
+ where b.agencyCode like '35%' and a.SHOP_GUID is not null 
+and a.RESOURCETYPE=1 and a.SHOP_GUID!='845A7007089242189633BBE0BBA8C477' 
+ and (a.del_flag is null or a.del_flag=0)
+ORDER BY a.CREATETIME
+	</select>
+	
+	<select id="getCarinfoOfDelete" resultMap="CarinfoOfDelete">
+	   select a.car_id,a.car_no,x.enterprise_store_name,x.police_county,a.remark from tab_rain_carinfo a
+inner JOIN (
+SELECT
+	a.SHOP_NAME AS enterprise_store_name,
+	REPLACE(case 	when c.unitName not in ('思明分局','湖里分局','集美分局','翔安分局','海沧分局','同安分局') then
+			'市辖区' 
+			else c.unitName end 
+	, '分局', '区') AS area_county,
+	'厦门市公安局交通警察支队'+REPLACE(case 	when c.unitName not in ('思明分局','湖里分局','集美分局','翔安分局','海沧分局','同安分局') then
+			'直属' 
+			else c.unitName end , '分局', '')+'大队' as police_county,
+	'福建省厦门市公安局'+b.unitName as police_town
+FROM tab_Shop a
+LEFT JOIN tab_UnitInfo b ON a.unitId = b.unitId
+LEFT JOIN tab_UnitInfo c ON c.unitId = b.parentId
+where (b.agencyCode like '35%' or b.agencyCode like '45%') 
+and a.SHOP_GUID is not null 
+and a.RESOURCETYPE=1 
+and a.SHOP_GUID!='845A7007089242189633BBE0BBA8C477'
+)  x on x.enterprise_store_name=a.shop_name
+	</select>
+</mapper>

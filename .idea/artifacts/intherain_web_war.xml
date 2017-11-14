@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="intherain-web:war">
+    <output-path>$PROJECT_DIR$/intherain-web/target</output-path>
+    <root id="archive" name="intherain-web-1.0.0.war">
+      <element id="artifact" artifact-name="intherain-web:war exploded" />
+    </root>
+  </artifact>
+</component>

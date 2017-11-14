@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry
+		location="E:/FileToTake/.m2/repository/net/sourceforge/jtds/jtds/1.3.1/jtds-1.3.1.jar" />
+	<context id="context1">
+<!-- 		<jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver"
+			connectionURL="jdbc:jtds:sqlserver://172.16.100.128:1433;DatabaseName=xmgps_police" 
+			userId="sa"
+			password="1234560" /> 	 -->	
+		<jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver"
+			connectionURL="jdbc:jtds:sqlserver://10.50.1.135:1433;DatabaseName=xmgps_police" 
+			userId="sa"
+			password="gpsserver" />
+		<!-- <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" -->
+		<!-- connectionURL="jdbc:oracle:thin:@192.168.118.128:1521:ORCL" userId="taxi" -->
+		<!-- password="gpsserver" /> -->
+		<javaModelGenerator targetPackage="com.time.scenery.rain.space.mybatis.generator" targetProject="InTheRainService" />
+		<sqlMapGenerator targetPackage="com.time.scenery.rain.space.mybatis.generator"	targetProject="InTheRainService" />
+		<javaClientGenerator targetPackage="com.time.scenery.rain.space.mybatis.generator"	targetProject="InTheRainService" type="XMLMAPPER" />
+
+		<!-- <table schema="" tableName="TAB_USER"> -->
+		<!-- <columnOverride column="???" property="???" /> -->
+		<!-- </table> -->
+		<!-- <table tableName="TAB_PASSENGERAPP_VERSION"></table> -->
+		<table tableName="rent_report_config_log"></table>
+	</context>
+</generatorConfiguration>

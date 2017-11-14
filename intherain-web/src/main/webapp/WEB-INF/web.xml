@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>InTheRain</display-name>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring.xml,classpath:spring-mybatis.xml</param-value>
+  </context-param>
+  <filter>
+    <description>字符集过滤器</description>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <description>字符集编码</description>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+  		<description>put请求支持过滤器</description>
+        <filter-name>httpPutFormcontentFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>httpPutFormcontentFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+  <listener>
+    <description>spring监听器</description>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <servlet>
+    <description>spring mvc servlet</description>
+    <servlet-name>springMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <description>spring mvc 配置文件</description>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springMvc</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>/index.jsp</welcome-file>
+  </welcome-file-list>
+  <session-config>
+    <session-timeout>15</session-timeout>
+  </session-config>
+<!-- Druid 监控客户端  -->
+<servlet>
+    <servlet-name>DruidStatView</servlet-name>
+    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+    <init-param>
+        <!-- 白名单 -->
+        <param-name>allow</param-name>
+        <param-value>192.168.1.120/24,111.206.116.68,127.0.0.1</param-value>
+    </init-param>
+    <init-param>
+        <!-- 用户名 -->
+        <param-name>loginUsername</param-name>
+        <param-value>rain</param-value>
+    </init-param>
+    <init-param>
+        <!-- 密码 -->
+        <param-name>loginPassword</param-name>
+        <param-value>1234560</param-value>
+    </init-param>
+</servlet>
+<servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
+</servlet-mapping>
+<!-- 如果需要监控uri，设置Web关联监控配置 -->
+<filter>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <init-param>
+        <param-name>exclusions</param-name>
+        <!-- 排除统计干扰 -->
+        <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+<!-- Druid 监控客户端 结束 -->
+</web-app>
